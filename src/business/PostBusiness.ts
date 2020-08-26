@@ -1,10 +1,8 @@
-import { UserDatabase } from "../data/UserDatabase";
-import { IdGenerator } from "../services/IdGenerator";
-import { HashManager } from "../services/HashManager";
-import { Authenticator } from "../services/Authenticator";
-import { UsersRelationDatabase } from "../data/UsersRelationDatabase";
-import { PostDatabase } from "../data/PostDatabase";
 import moment from "moment";
+
+import { IdGenerator } from "../services/IdGenerator";
+import { Authenticator } from "../services/Authenticator";
+import { PostDatabase } from "../data/PostDatabase";
 import { FeedDatabase } from "../data/FeedDatabase";
 
 export class PostBusiness {
@@ -38,13 +36,28 @@ export class PostBusiness {
             throw new Error("User must be logged");
         }
 
-        const userId = new FeedDatabase()
-        const user: any[] = []
-        userId.getFriendId(authenticationData.id)
-        user.push(userId)
+        const posts: any = []
+
+        const friendId = new FeedDatabase()
+        friendId.getFriendId(authenticationData.id)
+        posts.push(friendId)
         
-        user.map((id: string) => {
-          
+        const postsFriends: any[] = await posts.map((id: string) => {
+          return friendId.getFeed(id)
         })
+
+        return postsFriends
+    }
+
+    public async getPostsType(token: string, type: string): Promise<any> {
+        const authenticationData = Authenticator.getData(token)
+        if (!authenticationData) {
+            throw new Error("User must be logged");
+        }
+
+        const postsType = new PostDatabase()
+        const result = await postsType.getPostType(type)
+
+        return result
     }
 }
