@@ -2,6 +2,7 @@ import { UserDatabase } from "../data/UserDatabase";
 import { IdGenerator } from "../services/IdGenerator";
 import { HashManager } from "../services/HashManager";
 import { Authenticator } from "../services/Authenticator";
+import { UsersRelationDatabase } from "../data/UsersRelationDatabase";
 
 export class UserBusiness {
 	public async signup(
@@ -22,7 +23,7 @@ export class UserBusiness {
 		}
 
 		const id = IdGenerator.generate();
-		const hashPassword = HashManager.hash(password);
+		const hashPassword = await HashManager.hash(password);
 
 		const userDB = new UserDatabase();
 		await userDB.registerUser(id, name, email, hashPassword);
@@ -57,7 +58,7 @@ export class UserBusiness {
             throw new Error("User must be logged");
         }
 
-        const userRelationDB = new UserRelationDatabase()
+        const userRelationDB = new UsersRelationDatabase()
         await userRelationDB.makeFriendship(authenticationData.id, friendId)
     }
 

@@ -20,5 +20,7 @@ export class UsersRelationDatabase extends BaseDatabase{
         user_friend_id: friendId
       });
   }
+
+  
   
 }
