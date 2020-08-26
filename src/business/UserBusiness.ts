@@ -10,6 +10,8 @@ export class UserBusiness {
 		email: string,
 		password: string
 	): Promise<string> {
+		const userDB = new UserDatabase();
+
 		if (!name || !email || !password) {
 			throw new Error("Please fill all the fields");
 		}
@@ -22,10 +24,11 @@ export class UserBusiness {
 			throw new Error("Password must have at least 6 characters");
 		}
 
+
 		const id = IdGenerator.generate();
 		const hashPassword = await HashManager.hash(password);
 
-		const userDB = new UserDatabase();
+		
 		await userDB.registerUser(id, name, email, hashPassword);
 
 		const token = Authenticator.generateToken({ id });
@@ -52,16 +55,20 @@ export class UserBusiness {
     }
     
     public async makeFriendship(token: string, friendId: string): Promise<void> {
-        const authenticationData = Authenticator.getData(token)
+		
+		if(!token) {
+			throw new Error("User must be logged")
+		}
+		
+		if (!friendId) {
+			throw new Error("Friend id must be informed");
+		}
 
-        if (!authenticationData) {
-            throw new Error("User must be logged");
-        }
+		const authenticationData = Authenticator.getData(token)
 
 		const userRelationDB = new UsersRelationDatabase()
-		
 		const friendshipCheck = await userRelationDB.checkFriendhship(authenticationData.id, friendId)
-
+		
 		if (friendshipCheck) {
 			throw new Error("Friendship already exist");
 		}
@@ -70,14 +77,18 @@ export class UserBusiness {
 	}
 	
 	public async undoFriendship(token: string, friendId: string): Promise<void> {
+		
+		if(!token) {
+			throw new Error("User must be logged")
+		}
+
+		if (!friendId) {
+			throw new Error("Friend id must be informed");
+		}
+		
 		const authenticationData = Authenticator.getData(token)
 
-		if (!authenticationData) {
-            throw new Error("User must be logged");
-        }
-
 		const userRelationDB = new UsersRelationDatabase()
-		
 		const friendshipCheck = await userRelationDB.checkFriendhship(authenticationData.id, friendId)
 
 		if (!friendshipCheck) {
