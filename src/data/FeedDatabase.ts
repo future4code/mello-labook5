@@ -4,11 +4,11 @@ export class FeedDatabase extends BaseDatabase {
   public async getFriendId(userId: string): Promise<any> {
     const result = await this.getConnection().raw(`
       SELECT user_friend_id
-      FROM Friends_Relation
+      FROM Friends_Relations
       WHERE user_id = "${userId}"
     `)
 
-    return result[0]
+    return result[0][0]
   } 
 
   public async getFeed(creatorPostId: string): Promise<any> {

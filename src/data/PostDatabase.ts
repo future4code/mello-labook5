@@ -2,7 +2,7 @@ import { BaseDatabase } from "./BaseDatabase";
 import moment from "moment";
 
 export class PostDatabase extends BaseDatabase {
-  private static TABLE_NAME = 'Post';
+  private static TABLE_NAME = 'Posts';
 
   public async createPost(
     id: string, 
@@ -21,7 +21,7 @@ export class PostDatabase extends BaseDatabase {
         description,
         created_at: date.format("YYYY-MM-DD"),
         type,
-        creator_id: creatorId
+        user_id: creatorId
       }).into(PostDatabase.TABLE_NAME)
   }
 
