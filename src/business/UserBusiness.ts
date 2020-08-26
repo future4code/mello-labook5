@@ -58,8 +58,32 @@ export class UserBusiness {
             throw new Error("User must be logged");
         }
 
-        const userRelationDB = new UsersRelationDatabase()
-        await userRelationDB.makeFriendship(authenticationData.id, friendId)
-    }
+		const userRelationDB = new UsersRelationDatabase()
+		
+		const friendshipCheck = await userRelationDB.checkFriendhship(authenticationData.id, friendId)
 
+		if (friendshipCheck) {
+			throw new Error("Friendship already exist");
+		}
+
+        await userRelationDB.makeFriendship(authenticationData.id, friendId)
+	}
+	
+	public async undoFriendship(token: string, friendId: string): Promise<void> {
+		const authenticationData = Authenticator.getData(token)
+
+		if (!authenticationData) {
+            throw new Error("User must be logged");
+        }
+
+		const userRelationDB = new UsersRelationDatabase()
+		
+		const friendshipCheck = await userRelationDB.checkFriendhship(authenticationData.id, friendId)
+
+		if (!friendshipCheck) {
+			throw new Error("There is no friendship relation");
+		}
+
+        await userRelationDB.undoFriendship(authenticationData.id, friendId)
+	}
 }
