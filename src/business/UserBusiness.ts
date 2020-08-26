@@ -50,5 +50,15 @@ export class UserBusiness {
         return token
     }
     
+    public async makeFriendship(token: string, friendId: string): Promise<void> {
+        const authenticationData = Authenticator.getData(token)
+
+        if (!authenticationData) {
+            throw new Error("User must be logged");
+        }
+
+        const userRelationDB = new UserRelationDatabase()
+        await userRelationDB.makeFriendship(authenticationData.id, friendId)
+    }
 
 }
