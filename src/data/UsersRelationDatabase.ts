@@ -36,5 +36,4 @@ export class UsersRelationDatabase extends BaseDatabase{
       return Boolean(result)
   }
 
-  
 }
