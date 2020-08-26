@@ -18,7 +18,7 @@ CREATE TABLE Posts (
   created_at DATE,
   type ENUM("NORMAL", "EVENT") NOT NULL DEFAULT "NORMAL",
   user_id VARCHAR(255) NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES user_info(id) 
+  FOREIGN KEY (user_id) REFERENCES User_Info(id) 
   ON DELETE CASCADE
   ON UPDATE CASCADE
 );
@@ -28,9 +28,9 @@ CREATE TABLE Friends_Relations(
   user_id VARCHAR(255) NOT NULL,
   user_friend_id VARCHAR(255) NOT NULL,
   PRIMARY KEY (user_id, user_friend_id),
-  FOREIGN KEY (user_id) REFERENCES user_info(id) 
+  FOREIGN KEY (user_id) REFERENCES User_Info(id) 
   ON DELETE CASCADE,
-  FOREIGN KEY (user_friend_id) REFERENCES user_info(id)
+  FOREIGN KEY (user_friend_id) REFERENCES User_Info(id)
   ON DELETE CASCADE
 );
 
