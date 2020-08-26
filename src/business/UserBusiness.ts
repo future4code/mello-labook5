@@ -10,6 +10,8 @@ export class UserBusiness {
 		email: string,
 		password: string
 	): Promise<string> {
+		const userDB = new UserDatabase();
+
 		if (!name || !email || !password) {
 			throw new Error("Please fill all the fields");
 		}
@@ -22,10 +24,11 @@ export class UserBusiness {
 			throw new Error("Password must have at least 6 characters");
 		}
 
+
 		const id = IdGenerator.generate();
 		const hashPassword = await HashManager.hash(password);
 
-		const userDB = new UserDatabase();
+		
 		await userDB.registerUser(id, name, email, hashPassword);
 
 		const token = Authenticator.generateToken({ id });
