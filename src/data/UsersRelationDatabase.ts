@@ -18,7 +18,23 @@ export class UsersRelationDatabase extends BaseDatabase{
       .where({
         user_id: userId,
         user_friend_id: friendId
-      });
+      })
   }
+
+  public async checkFriendhship(userId: string, friendId: string): Promise<boolean> {
+    const result = await this.getConnection()
+      .count("id as count")
+      .where({
+        user_id: userId,
+        user_friend_id: friendId
+      })
+      .orWhere({
+        user_id: friendId,
+        user_friend_id: userId
+      })
+
+      return Boolean(result)
+  }
+
   
 }
