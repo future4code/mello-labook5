@@ -1,5 +1,5 @@
 import { BaseDatabase } from "./BaseDatabase";
-import moment from "moment"
+import moment from "moment";
 
 export class PostDatabase extends BaseDatabase {
   private static TABLE_NAME = 'Post';
@@ -17,12 +17,21 @@ export class PostDatabase extends BaseDatabase {
     await this.getConnection()
       .insert({
         id,
-        photo,
+        photo_url: photo,
         description,
-        create_at: date.format("YYYY-MM-DD"),
+        created_at: date.format("YYYY-MM-DD"),
         type,
         creator_id: creatorId
       }).into(PostDatabase.TABLE_NAME)
+  }
+
+  public async getPostType(type: string): Promise<any> {
+    const result = await this.getConnection()
+      .select('photo_url', 'description', 'created_at', 'type')
+      .from(PostDatabase.TABLE_NAME)
+      .where({ type });
+
+    return result[0];
   }
 
 }
