@@ -40,4 +40,42 @@ export class UserController {
         }
         await BaseDatabase.destroyConnection()
     }
+
+    async makeFriendship(req: Request, res: Response) {
+        try{
+            const userBusiness: UserBusiness = new UserBusiness()
+
+            const token = req.headers.authorization as string
+            
+            await userBusiness.makeFriendship(token, req.body.friendId)
+
+            res.status(200).send({
+                message: "Succes"
+            })
+        } catch (error) {
+            res.status(400).send({
+                error: error.sqlMessage || error.message
+            })
+        }
+        await BaseDatabase.destroyConnection()
+    }
+
+    async undoFriendship(req: Request, res: Response) {
+        try{
+            const userBusiness: UserBusiness = new UserBusiness()
+
+            const token = req.headers.authorization as string
+            
+            await userBusiness.undoFriendship(token, req.body.friendId)
+
+            res.status(200).send({
+                message: "Succes"
+            })
+        } catch (error) {
+            res.status(400).send({
+                error: error.sqlMessage || error.message
+            })
+        }
+        await BaseDatabase.destroyConnection()
+    }
 }
