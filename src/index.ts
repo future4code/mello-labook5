@@ -1,19 +1,15 @@
 import express from "express";
 import dotenv from "dotenv";
 import { AddressInfo } from "net";
-import { UserController } from "./controller/UserController";
-import { UserDatabase } from "./data/UserDatabase";
-import { UserBusiness } from "./business/UserBusiness";
-import { UsersRelationDatabase } from "./data/UsersRelationDatabase";
+import { userRouter } from "./routes/userRouter";
+import { postRouter } from "./routes/postRouter"
 
 dotenv.config()
 const app = express();
 app.use(express.json());
 
-app.post("/signup", new UserController().signup)
-app.post("/login", new UserController().login)
-app.post("/users/connect", new UserController().makeFriendship)
-app.delete("/users/disconnect", new UserController().undoFriendship)
+app.use("/user", userRouter);
+app.use("/post", postRouter)
 
 
 
