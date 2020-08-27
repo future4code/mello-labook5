@@ -1,6 +1,7 @@
 import { BaseDatabase } from "./BaseDatabase";
 import moment from "moment";
 
+
 export class PostDatabase extends BaseDatabase {
   private static TABLE_NAME = 'Posts';
 
