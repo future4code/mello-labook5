@@ -1,16 +1,7 @@
 import {BaseDatabase} from "./BaseDatabase";
 
 export class FeedDatabase extends BaseDatabase {
-  public async getFriendsId(userId: string): Promise<any> {
-    const result = await this.getConnection().raw(`
-      SELECT user_friend_id
-      FROM Friends_Relations
-      WHERE user_id = "${userId}"
-    `)
-    
-    return result[0]
-  } 
-
+  
   public async getFeed(userId: string): Promise<any> {
     const result = await this.getConnection().raw(`
       SELECT 
