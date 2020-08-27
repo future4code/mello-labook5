@@ -33,5 +33,18 @@ CREATE TABLE Friends_Relations(
   FOREIGN KEY (user_friend_id) REFERENCES User_Info(id)
   ON DELETE CASCADE
 );
+```
+```sql
+CREATE TABLE Comments (
+  id VARCHAR(255) NOT NULL,	
+  comment VARCHAR(600) NOT NULL,
+  created_at DATE DEFAULT (current_date),
+  post_id VARCHAR(255) NOT NULL,
+  user_id VARCHAR(255) NOT NULL,
+  FOREIGN KEY (post_id) REFERENCES Posts(id) 
+  ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES User_Info(id)
+  ON DELETE CASCADE
+);
 
 ```
