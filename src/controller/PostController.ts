@@ -5,12 +5,12 @@ import { PostBusiness } from "../business/PostBusiness";
 export class PostController {
     async createPost(req: Request, res: Response) {
         try {
-            const creatorPost = new PostBusiness()
+            const postBusiness: PostBusiness = new PostBusiness()
     
             const token = req.headers.authorization as string
-            const { photo, description, type } = req.body
+            const { photoUrl, description, type } = req.body
 
-            const post = await creatorPost.createPost(token, photo, description, type)
+            await postBusiness.createPost(token, photoUrl, description, type)
 
             res.status(200).send({
                 message: "Success"
@@ -42,7 +42,7 @@ export class PostController {
         await BaseDatabase.destroyConnection()
     }
 
-    async getPostsTypet(req: Request, res: Response) {
+    async getPostsType(req: Request, res: Response) {
         try {
             const typePost = new PostBusiness()
     

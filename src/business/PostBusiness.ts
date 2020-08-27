@@ -1,5 +1,4 @@
 import moment from "moment";
-
 import { IdGenerator } from "../services/IdGenerator";
 import { Authenticator } from "../services/Authenticator";
 import { PostDatabase } from "../data/PostDatabase";
@@ -12,15 +11,16 @@ export class PostBusiness {
 		photo: string,
         description: string,
         type: string
-	): Promise<void> {
+	): Promise<any> {
 		if (!photo || !description || !type) {
 			throw new Error("Please fill all the fields");
         }
 
-        const authenticationData = Authenticator.getData(token)
-        if (!authenticationData) {
+        if (!token) {
             throw new Error("User must be logged");
         }
+
+        const authenticationData = Authenticator.getData(token)
         
         const id = IdGenerator.generate();
         const date = moment()
@@ -30,24 +30,28 @@ export class PostBusiness {
 
     }
 
-    public async getFeed(token: string): Promise<any> {
+    public async getFeed(token: string): Promise<any[]> {
         const authenticationData = Authenticator.getData(token)
-        if (!authenticationData) {
+        
+        if (!token) {
             throw new Error("User must be logged");
         }
 
-        const posts: any[] = []
-        const feed: any[] = []
-
-        const friendId = new FeedDatabase()
-        friendId.getFriendId(authenticationData.id)
-        posts.push(friendId)
+        const feedDB = new FeedDatabase()
         
-        const postsFriends: any[] = await posts.map((id: string) => {
-          return feed.push(friendId.getFeed(id))
-        })
-
-        return feed
+        const posts = await feedDB.getFeed(authenticationData.id)
+        
+        if (posts) {
+            const feed: any[] = []
+            for (let post of posts) {
+                post.createdAt = moment(post.createdAt).format("DD/MM/YYYY")
+                 
+                feed.push(post)
+            }
+            return feed
+        } else {
+            return []
+        }
     }
 
     public async getPostsType(token: string, type: string): Promise<any> {
