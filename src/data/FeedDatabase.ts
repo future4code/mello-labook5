@@ -11,7 +11,9 @@ export class FeedDatabase extends BaseDatabase {
         p.created_at AS createdAt,
         p.type,
         u.id AS creatorUserId,
-        u.name AS creatorUserName
+        u.name AS creatorUserName,
+        (SELECT COUNT(1) FROM Posts_Like pl WHERE pl.post_id = p.id) as likesCount,
+        (SELECT COUNT(1) FROM Comments c WHERE c.post_id = p.id) as commentsCount
       FROM 
         Posts p JOIN User_Info u ON p.user_id = u.id
         JOIN Friends_Relations fr ON fr.user_friend_id = u.id

@@ -67,7 +67,7 @@ export class PostBusiness {
         if (result) {
             const feed: any[] = []
             for (let post of result) {
-                post.createAt = moment(post.createAt).format("DD/MM/YYYY")
+                post.createdAt = moment(post.createdAt).format("DD/MM/YYYY")
                  
                 feed.push(post)
             }
