@@ -30,26 +30,6 @@ export class PostBusiness {
 
     }
 
-    // public async getFeed(token: string): Promise<any> {
-    //     const authenticationData = Authenticator.getData(token)
-    //     if (!authenticationData) {
-    //         throw new Error("User must be logged");
-    //     }
-
-    //     const posts: any[] = []
-    //     const feed: any[] = []
-
-    //     const friendId = new FeedDatabase()
-    //     friendId.getFriendsId(authenticationData.id)
-    //     posts.push(friendId)
-        
-    //     const postsFriends: any[] = await posts.map((id: string) => {
-    //       return feed.push(friendId.getFeed(id))
-    //     })
-
-    //     return feed
-    // }
-
     public async getFeed(token: string): Promise<any[]> {
         const authenticationData = Authenticator.getData(token)
         
