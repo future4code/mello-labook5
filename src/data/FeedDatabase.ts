@@ -11,16 +11,6 @@ export class FeedDatabase extends BaseDatabase {
     return result[0]
   } 
 
-  // public async getFeed(creatorPostId: string): Promise<any> {
-  //   const result = await this.getConnection().raw(`
-  //     SELECT photo_url, description, created_at, type
-  //     FROM Posts
-  //     WHERE id = "${creatorPostId}"
-  //   `);
-
-  //   return result[0]
-  // }
-
   public async getFeed(userId: string): Promise<any> {
     const result = await this.getConnection().raw(`
       SELECT 
