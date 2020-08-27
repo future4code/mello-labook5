@@ -4,6 +4,8 @@ import { Authenticator } from "../services/Authenticator";
 import { PostDatabase } from "../data/PostDatabase";
 import { FeedDatabase } from "../data/FeedDatabase";
 import { LikeDatabase } from "../data/LikeDatabase";
+import { CommentDatabase } from "../data/CommentDatabase";
+
 
 export class PostBusiness {
 
@@ -78,21 +80,22 @@ export class PostBusiness {
     }
 
     public async likePost(postId: string, token: string): Promise<void> {
-        const authenticationData = Authenticator.getData(token)
-        
         if (!token) {
             throw new Error("User must be logged");
         }
+        
+        const authenticationData = Authenticator.getData(token)
+        
 
         if (!postId) {
-            throw new Error("Post it must be informed");
+            throw new Error("Post id must be informed");
         }
 
         const likeDB = new LikeDatabase()
         await likeDB.likePost(postId, authenticationData.id)
     }
-
-    public async dislikePost(postId: string, token: string): Promise<void> {
+  
+  public async dislikePost(postId: string, token: string): Promise<void> {
         const authenticationData = Authenticator.getData(token)
         
         if (!token) {
@@ -105,5 +108,25 @@ export class PostBusiness {
 
         const dislikeDB = new LikeDatabase()
         await dislikeDB.dislikePost(postId, authenticationData.id)
+    }
+
+
+    public async commentPost(comment: string, postId: string, token: string): Promise<void> {
+        
+        if (!token) {
+            throw new Error("User must be logged");
+        }
+      
+        const authenticationData = Authenticator.getData(token)
+
+        if (!postId || !comment) {
+            throw new Error("Please fill all the fields");
+        }
+
+        const id = IdGenerator.generate()
+
+        const commentDB = new CommentDatabase()
+        await commentDB.createComment(id, comment, postId, authenticationData.id)
+
     }
 }
