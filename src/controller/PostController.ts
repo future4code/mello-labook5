@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { BaseDatabase } from "../data/BaseDatabase";
 import { PostBusiness } from "../business/PostBusiness";
-import { PostDatabase } from "../data/PostDatabase";
 
 export class PostController {
     async createPost(req: Request, res: Response) {
@@ -43,14 +42,14 @@ export class PostController {
         await BaseDatabase.destroyConnection()
     }
 
-    async getPostsType(req: Request, res: Response) {
+    async postsByType(req: Request, res: Response) {
         try {
             const typePost = new PostBusiness()
     
             const token = req.headers.authorization as string
             const type = req.params.type
             
-            const feed = await typePost.getPostsType(token, type)
+            const feed = await typePost.getPostsByType(token, type)
 
             res.status(200).send({
                 feed
@@ -70,7 +69,23 @@ export class PostController {
             const postBusiness: PostBusiness = new PostBusiness()
             await postBusiness.likePost(req.params.id, token)
 
-            res.sendStatus(200)
+            res.status(200).send({message: "Success"})
+        } catch (error) {
+            res.status(400).send({
+                error: error.sqlMessage || error.message
+            })
+        }
+        await BaseDatabase.destroyConnection()
+    }
+
+    async dislikePost(req: Request, res: Response) {
+        try {
+            const token = req.headers.authorization as string
+
+            const postBusiness: PostBusiness = new PostBusiness()
+            await postBusiness.dislikePost(req.params.id, token)
+
+            res.status(200).send({message: "Success"})
         } catch (error) {
             res.status(400).send({
                 error: error.sqlMessage || error.message

@@ -57,16 +57,26 @@ export class PostBusiness {
         }
     }
 
-    public async getPostsType(token: string, type: string): Promise<any> {
+    public async getPostsByType(token: string, type: string): Promise<any> {
         const authenticationData = Authenticator.getData(token)
         if (!authenticationData) {
             throw new Error("User must be logged");
         }
 
         const postsType = new PostDatabase()
-        const result = await postsType.getPostType(type)
+        const result = await postsType.getPostByType(type)
 
-        return result
+        if (result) {
+            const feed: any[] = []
+            for (let post of result) {
+                post.createAt = moment(post.createAt).format("DD/MM/YYYY")
+                 
+                feed.push(post)
+            }
+            return feed
+        } else {
+            return []
+        }
     }
 
     public async likePost(postId: string, token: string): Promise<void> {
@@ -84,13 +94,29 @@ export class PostBusiness {
         const likeDB = new LikeDatabase()
         await likeDB.likePost(postId, authenticationData.id)
     }
+  
+  public async dislikePost(postId: string, token: string): Promise<void> {
+        const authenticationData = Authenticator.getData(token)
+        
+        if (!token) {
+            throw new Error("User must be logged");
+        }
+
+        if (!postId) {
+            throw new Error("Post it must be informed");
+        }
+
+        const dislikeDB = new LikeDatabase()
+        await dislikeDB.dislikePost(postId, authenticationData.id)
+    }
+
 
     public async commentPost(comment: string, postId: string, token: string): Promise<void> {
         
         if (!token) {
             throw new Error("User must be logged");
         }
-
+      
         const authenticationData = Authenticator.getData(token)
 
         if (!postId || !comment) {
@@ -101,5 +127,6 @@ export class PostBusiness {
 
         const commentDB = new CommentDatabase()
         await commentDB.createComment(id, comment, postId, authenticationData.id)
+
     }
 }
