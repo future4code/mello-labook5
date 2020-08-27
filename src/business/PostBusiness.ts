@@ -36,17 +36,18 @@ export class PostBusiness {
             throw new Error("User must be logged");
         }
 
-        const posts: any = []
+        const posts: any[] = []
+        const feed: any[] = []
 
         const friendId = new FeedDatabase()
         friendId.getFriendId(authenticationData.id)
         posts.push(friendId)
         
         const postsFriends: any[] = await posts.map((id: string) => {
-          return friendId.getFeed(id)
+          return feed.push(friendId.getFeed(id))
         })
 
-        return postsFriends
+        return feed
     }
 
     public async getPostsType(token: string, type: string): Promise<any> {
