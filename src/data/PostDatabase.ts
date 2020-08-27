@@ -26,7 +26,7 @@ export class PostDatabase extends BaseDatabase {
       }).into(PostDatabase.TABLE_NAME)
   }
 
-  public async getPostByType(type: string): Promise<any> {
+  public async getPostByType(type: string, postPerPage: number, offset: number): Promise<any> {
     const result = await this.getConnection().raw(`
         SELECT 
             p.id AS postId,
@@ -44,12 +44,9 @@ export class PostDatabase extends BaseDatabase {
           WHERE 
             p.type = "${type}"
           ORDER BY p.created_at DESC
+          LIMIT ${postPerPage}
+          OFFSET ${offset}
     `)
-    
-      // .select('photo_url', 'description', 'created_at AS createAt', 'type')
-      // .from(PostDatabase.TABLE_NAME)
-      // .where({ type })
-      // .orderBy('created_at', 'DESC')
 
     return result[0];
   }

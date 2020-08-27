@@ -2,7 +2,7 @@ import {BaseDatabase} from "./BaseDatabase";
 
 export class FeedDatabase extends BaseDatabase {
   
-  public async getFeed(userId: string): Promise<any> {
+  public async getFeed(userId: string, postPerPage: number, offset: number): Promise<any> {
     const result = await this.getConnection().raw(`
       SELECT 
         p.id AS postId,
@@ -19,7 +19,9 @@ export class FeedDatabase extends BaseDatabase {
         JOIN Friends_Relations fr ON fr.user_friend_id = u.id
       WHERE 
         fr.user_id = "${userId}"
-      ORDER BY p.created_at DESC  
+      ORDER BY p.created_at DESC
+      LIMIT ${postPerPage}
+      OFFSET ${offset}  
     `);
 
     return result[0]
