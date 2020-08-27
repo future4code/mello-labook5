@@ -26,14 +26,13 @@ export class PostDatabase extends BaseDatabase {
       }).into(PostDatabase.TABLE_NAME)
   }
 
-  public async getPostType(type: string): Promise<any> {
+  public async getPostByType(type: string): Promise<any> {
     const result = await this.getConnection()
-      .select('photo_url', 'description', 'created_at', 'type')
+      .select('photo_url', 'description', 'created_at AS createAt', 'type')
       .from(PostDatabase.TABLE_NAME)
-      .where({ type });
+      .where({ type })
+      .orderBy('created_at', 'DESC')
 
-    return result[0];
+    return result;
   }
-
-
 }
