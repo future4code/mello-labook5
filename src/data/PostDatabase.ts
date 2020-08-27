@@ -26,12 +26,14 @@ export class PostDatabase extends BaseDatabase {
       }).into(PostDatabase.TABLE_NAME)
   }
 
-  public async getPostByType(type: string): Promise<any> {
+  public async getPostByType(type: string, postPerPage: number, offset: number): Promise<any> {
     const result = await this.getConnection()
       .select('photo_url', 'description', 'created_at AS createAt', 'type')
       .from(PostDatabase.TABLE_NAME)
       .where({ type })
       .orderBy('created_at', 'DESC')
+      .limit(postPerPage)
+      .offset(offset)
 
     return result;
   }

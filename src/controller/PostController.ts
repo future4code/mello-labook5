@@ -28,8 +28,9 @@ export class PostController {
             const feedPost = new PostBusiness()
     
             const token = req.headers.authorization as string
+            const page = Number(req.query.page)
             
-            const feed = await feedPost.getFeed(token)
+            const feed = await feedPost.getFeed(token, page)
 
             res.status(200).send({
                 feed
@@ -48,8 +49,9 @@ export class PostController {
     
             const token = req.headers.authorization as string
             const type = req.params.type
+            const page = Number(req.query.page)
             
-            const feed = await typePost.getPostsByType(token, type)
+            const feed = await typePost.getPostsByType(token, type, page)
 
             res.status(200).send({
                 feed
@@ -81,6 +83,7 @@ export class PostController {
     async dislikePost(req: Request, res: Response) {
         try {
             const token = req.headers.authorization as string
+
 
             const postBusiness: PostBusiness = new PostBusiness()
             await postBusiness.dislikePost(req.params.id, token)

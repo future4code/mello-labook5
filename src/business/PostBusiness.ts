@@ -6,7 +6,7 @@ import { FeedDatabase } from "../data/FeedDatabase";
 import { LikeDatabase } from "../data/LikeDatabase";
 
 export class PostBusiness {
-
+    
 	public async createPost(
         token: string,
 		photo: string,
@@ -31,16 +31,24 @@ export class PostBusiness {
 
     }
 
-    public async getFeed(token: string): Promise<any[]> {
+    public async getFeed(token: string, page: number): Promise<any[]> {
+
         const authenticationData = Authenticator.getData(token)
         
         if (!token) {
             throw new Error("User must be logged");
         }
 
+        if (!page || page < 1 || Number.isNaN(page)) {
+          page = 1;
+        }
+
+        const postPerPage = 5
+        const offset = postPerPage * (page - 1)
+
         const feedDB = new FeedDatabase()
         
-        const posts = await feedDB.getFeed(authenticationData.id)
+        const posts = await feedDB.getFeed(authenticationData.id, postPerPage, offset)
         
         if (posts) {
             const feed: any[] = []
@@ -55,14 +63,22 @@ export class PostBusiness {
         }
     }
 
-    public async getPostsByType(token: string, type: string): Promise<any> {
+    public async getPostsByType(token: string, type: string, page: number): Promise<any> {
         const authenticationData = Authenticator.getData(token)
-        if (!authenticationData) {
+        
+        if (!token) {
             throw new Error("User must be logged");
         }
 
+        if (!page || page < 1 || Number.isNaN(page)) {
+            page = 1;
+        }
+  
+        const postPerPage = 5
+        const offset = postPerPage * (page - 1)
+
         const postsType = new PostDatabase()
-        const result = await postsType.getPostByType(type)
+        const result = await postsType.getPostByType(type, postPerPage, offset)
 
         if (result) {
             const feed: any[] = []
