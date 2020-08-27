@@ -3,6 +3,7 @@ import { IdGenerator } from "../services/IdGenerator";
 import { Authenticator } from "../services/Authenticator";
 import { PostDatabase } from "../data/PostDatabase";
 import { FeedDatabase } from "../data/FeedDatabase";
+import { LikeDatabase } from "../data/LikeDatabase";
 
 export class PostBusiness {
 
@@ -84,5 +85,20 @@ export class PostBusiness {
         const result = await postsType.getPostType(type)
 
         return result
+    }
+
+    public async likePost(postId: string, token: string): Promise<void> {
+        const authenticationData = Authenticator.getData(token)
+        
+        if (!token) {
+            throw new Error("User must be logged");
+        }
+
+        if (!postId) {
+            throw new Error("Post it must be informed");
+        }
+
+        const likeDB = new LikeDatabase()
+        await likeDB.likePost(postId, authenticationData.id)
     }
 }
