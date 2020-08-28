@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import { AddressInfo } from "net";
 import { userRouter } from "./routes/userRouter";
 import { postRouter } from "./routes/postRouter"
+import { UsersRelationDatabase } from "./data/UsersRelationDatabase";
+import { PostBusiness } from "./business/PostBusiness";
 
 dotenv.config()
 const app = express();

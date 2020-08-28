@@ -5,6 +5,7 @@ import { PostDatabase } from "../data/PostDatabase";
 import { FeedDatabase } from "../data/FeedDatabase";
 import { LikeDatabase } from "../data/LikeDatabase";
 import { CommentDatabase } from "../data/CommentDatabase";
+import { UsersRelationDatabase } from "../data/UsersRelationDatabase";
 
 
 export class PostBusiness {
@@ -85,7 +86,7 @@ export class PostBusiness {
         if (result) {
             const feed: any[] = []
             for (let post of result) {
-                post.createAt = moment(post.createAt).format("DD/MM/YYYY")
+                post.createdAt = moment(post.createdAt).format("DD/MM/YYYY")
                  
                 feed.push(post)
             }
@@ -135,6 +136,16 @@ export class PostBusiness {
       
         const authenticationData = Authenticator.getData(token)
 
+        const postDB = new PostDatabase()
+        const post = await postDB.getPostById(postId)
+       
+        const usersRelationDB =  new UsersRelationDatabase()
+        const isAFriendship = await usersRelationDB.checkFriendhship(authenticationData.id, post.user_id)
+        
+        if (!isAFriendship) {
+            throw new Error("Comments are only allowed on friends posts");
+        }
+
         if (!postId || !comment) {
             throw new Error("Please fill all the fields");
         }
@@ -143,6 +154,6 @@ export class PostBusiness {
 
         const commentDB = new CommentDatabase()
         await commentDB.createComment(id, comment, postId, authenticationData.id)
-
     }
-}
+
+}  

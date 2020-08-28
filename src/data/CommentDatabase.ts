@@ -17,4 +17,19 @@ export class CommentDatabase extends BaseDatabase {
             user_id: userId,
           }).into(CommentDatabase.TABLE_NAME)
     }
+
+    public async getPostComments(postId: string, userId: string, postPerPage: number, offset: number): Promise<any> {
+        const response = await this.getConnection().raw(`
+            SELECT c.id as commentId, c.comment, c.created_at, c.user_id, u.name
+            FROM 
+                Comments c JOIN User_Info u ON c.user_id = u.id
+                JOIN Friends_Relations fr ON fr.user_friend_id = u.id
+            WHERE fr.user_id = "${userId}" AND c.post_id = "${postId}"
+            ORDER BY p.created_at DESC
+            LIMIT ${postPerPage}
+            OFFSET ${offset}
+        `)
+
+        return response[0]
+    }
 }
