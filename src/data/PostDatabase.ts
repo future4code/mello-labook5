@@ -50,4 +50,13 @@ export class PostDatabase extends BaseDatabase {
 
     return result[0];
   }
+
+  public async getPostById(postId: string): Promise<any> {
+    const result = await this.getConnection().raw(`
+      SELECT * FROM ${PostDatabase.TABLE_NAME}
+      WHERE id = "${postId}"
+    `)
+
+    return result[0][0]
+  }
 }
