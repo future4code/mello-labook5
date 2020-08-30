@@ -7,12 +7,13 @@ export class UserController {
         try {
             const userBusiness: UserBusiness = new UserBusiness()
     
-            const { name, email, password } = req.body
+            const { name, email, password, device } = req.body
 
-            const token = await userBusiness.signup(name, email, password)
+            const response = await userBusiness.signup(name, email, password, device)
 
             res.status(200).send({
-                token: token
+                token: response.accessToken,
+                refreshToken: response.refreshToken
             })  
         } catch (error) {
             res.status(400).send({
@@ -26,13 +27,14 @@ export class UserController {
         try {
             const userBusiness: UserBusiness = new UserBusiness()
     
-            const { email, password } = req.body
+            const { email, password, device } = req.body
 
-            const token = await userBusiness.login(email, password)
+            const response = await userBusiness.login(email, password, device)
 
             res.status(200).send({
-                token: token
-            })  
+                token: response.accessToken,
+                refreshToken: response.refreshToken
+            })   
         } catch (error) {
             res.status(400).send({
                 error: error.sqlMessage || error.message
@@ -50,7 +52,7 @@ export class UserController {
             await userBusiness.makeFriendship(token, req.body.friendId)
 
             res.status(200).send({
-                message: "Succes"
+                message: "Success"
             })
         } catch (error) {
             res.status(400).send({
@@ -69,13 +71,34 @@ export class UserController {
             await userBusiness.undoFriendship(token, req.body.friendId)
 
             res.status(200).send({
-                message: "Succes"
+                message: "Success"
             })
         } catch (error) {
             res.status(400).send({
                 error: error.sqlMessage || error.message
             })
         }
+        await BaseDatabase.destroyConnection()
+    }
+
+    async refreshToken(req: Request, res: Response) {
+        try {
+            const userBusiness: UserBusiness = new UserBusiness();
+            
+            const refreshToken = req.body.refreshToken;
+            const device = req.body.device
+
+            const accessToken = await userBusiness.getRefreshToken(refreshToken, device);
+
+            res.status(200).send({
+                accessToken
+            })
+        } catch (error) {
+            res.status(400).send({
+                error: error.sqlMessage || error.message
+            })
+        }
+
         await BaseDatabase.destroyConnection()
     }
 }

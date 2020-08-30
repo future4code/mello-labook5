@@ -1,5 +1,6 @@
 import { BaseDatabase } from "./BaseDatabase";
 import moment from "moment";
+import { Post } from "../model/Post";
 
 
 export class PostDatabase extends BaseDatabase {
@@ -51,12 +52,12 @@ export class PostDatabase extends BaseDatabase {
     return result[0];
   }
 
-  public async getPostById(postId: string): Promise<any> {
+  public async getPostById(postId: string): Promise<Post> {
     const result = await this.getConnection().raw(`
       SELECT * FROM ${PostDatabase.TABLE_NAME}
       WHERE id = "${postId}"
     `)
 
-    return result[0][0]
+    return Post.toPostModel(result[0])
   }
 }

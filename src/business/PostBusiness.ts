@@ -140,7 +140,7 @@ export class PostBusiness {
         const post = await postDB.getPostById(postId)
        
         const usersRelationDB =  new UsersRelationDatabase()
-        const isAFriendship = await usersRelationDB.checkFriendhship(authenticationData.id, post.user_id)
+        const isAFriendship = await usersRelationDB.checkFriendhship(authenticationData.id, post.getUserId())
         
         if (!isAFriendship) {
             throw new Error("Comments are only allowed on friends posts");
