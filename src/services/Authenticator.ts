@@ -7,6 +7,7 @@ export class Authenticator {
     const token = jwt.sign(
       {
         id: input.id,
+        device: input.device
       },
 
       process.env.JWT_KEY as string,
@@ -22,11 +23,14 @@ export class Authenticator {
     const payload = jwt.verify(token, process.env.JWT_KEY as string) as any;
     const result = {
       id: payload.id,
+      device: payload.device
     };
+    
     return result;
   }
 }
 
 interface AuthenticationData {
   id: string;
+  device?: string;
 }
